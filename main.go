@@ -2,13 +2,22 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"gee"
 	"net/http"
 )
 
+// run后在另一个console查看
 func main() {
-	fmt.Println("Starting server on :9999")
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/hello", helloHandler)
-	log.Fatal(http.ListenAndServe(":9999", nil))
+	r := gee.New()
+	r.GET("/", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprintf(w, "URL.Path = %q\n", req.URL.Path)
+	})
+
+	r.GET("/hello", func(w http.ResponseWriter, req *http.Request) {
+		for k, v := range req.Header {
+			fmt.Fprintf(w, "Header[%q] = %q\n", k, v)
+		}
+	})
+
+	r.Run(":9999")
 }
