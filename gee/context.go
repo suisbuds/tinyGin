@@ -14,6 +14,7 @@ type Context struct {
 	//请求信息
 	Path   string
 	Method string
+	Params map[string]string //解析参数
 	//响应信息
 	StatusCode int
 }
@@ -42,6 +43,12 @@ func (c *Context) Status(code int) {
 
 func (c *Context) SetHeader(key string, value string) {
 	c.writer.Header().Set(key, value)
+}
+
+// 访问解析的参数
+func (c *Context) Param(key string) string {
+	value := c.Params[key]
+	return value
 }
 
 // 快速构造响应
