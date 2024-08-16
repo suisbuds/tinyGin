@@ -3,6 +3,7 @@ package gee
 import (
 	"log"
 	"net/http"
+	"strings"
 )
 
 // 路由映射处理方法
@@ -60,8 +61,22 @@ func (engine *Engine) Run(addr string) (err error) {
 	return http.ListenAndServe(addr, engine)
 }
 
+// 添加中间件
+func (g *RouterGroup) Use(middlewares ...HandleFunc) {
+	g.middlewares = append(g.middlewares, middlewares...)
+
+}
+
 // 解析请求，查找路由映射表
+// 通过URL前缀查找对应的中间件
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var middlewares []HandleFunc
+	for _, group := range engine.groups {
+		if strings.HasPrefix(r.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewares...) // 收集所有的中间件
+		}
+	}
 	c := newContext(w, r)
+	c.handlers = middlewares
 	engine.router.handle(c)
 }
