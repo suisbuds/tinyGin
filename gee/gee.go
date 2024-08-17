@@ -28,6 +28,13 @@ type RouterGroup struct {
 	parent      *RouterGroup // 支持嵌套
 }
 
+// 创建默认引擎,并添加默认中间件
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
+	return engine
+}
+
 func New() *Engine {
 	engine := &Engine{router: newRouter()}
 	engine.RouterGroup = &RouterGroup{engine: engine}
