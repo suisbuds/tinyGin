@@ -1,3 +1,2 @@
-# gee
+# tinyGin
 
-reference: 7days-go

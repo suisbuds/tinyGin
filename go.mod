@@ -1,7 +1,7 @@
-module MyGee
+module MyGin
 
 go 1.23.0
 
-require gee v0.0.0
+require tinyGin v0.0.0
 
-replace gee => ./gee
+replace tinyGin => ./tinyGin
